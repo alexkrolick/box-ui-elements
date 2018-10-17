@@ -46,7 +46,7 @@
     "build-link-lib": "yarn run clean:lib && BABEL_ENV=dev NODE_ENV=dev yarn run build:es --ignore \"**/__tests__/**\",\"src/components/messages.js\" --copy-files -s inline",
     "build-lib": "yarn run clean:lib && BABEL_ENV=npm NODE_ENV=production yarn run build:es --ignore \"**/__tests__/**\"",
     "build:i18n": "node ./node_modules/@box/i18n/props2es.js ./i18n ./i18n/json",
-    "changelog": "./node_modules/.bin/conventional-changelog -i CHANGELOG.md -s -r 0",
+    "changelog": "conventional-changelog -i CHANGELOG.md -s -r 0",
     "clean": "rm -rf dist lib reports/* i18n/json i18n/*.js styleguide",
     "clean:lib": "rm -rf lib",
     "clean-styleguide": "rm -rf styleguide",
