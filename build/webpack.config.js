@@ -74,7 +74,11 @@ function getConfig(isReactExternalized) {
                     exclude: /(node_modules)/
                 },
                 {
-                    test: /\.s?css$/,
+                    test: /\.css$/,
+                    use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader']
+                },
+                {
+                    test: /\.scss$/,
                     use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader']
                 }
             ]

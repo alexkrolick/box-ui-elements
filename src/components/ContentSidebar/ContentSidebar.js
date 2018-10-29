@@ -28,6 +28,7 @@ import SidebarUtils from './SidebarUtils';
 import type { DetailsSidebarProps } from './DetailsSidebar';
 import type { ActivitySidebarProps } from './ActivitySidebar';
 import type { MetadataSidebarProps } from './MetadataSidebar';
+import type { FeatureConfig } from './Feature';
 import type { $AxiosXHR } from 'axios'; // eslint-disable-line
 import '../fonts.scss';
 import '../base.scss';
@@ -43,6 +44,7 @@ type Props = {
     className: string,
     defaultView?: SidebarView,
     currentUser?: User,
+    features?: FeatureConfig,
     getPreview: Function,
     getViewer: Function,
     hasSkills: boolean,
@@ -357,6 +359,7 @@ class ContentSidebar extends PureComponent<Props, State> {
             messages,
             getPreview,
             getViewer,
+            features,
             hasActivityFeed,
             className,
             activitySidebarProps,
@@ -379,7 +382,7 @@ class ContentSidebar extends PureComponent<Props, State> {
         const styleClassName = classNames(
             'be bcs',
             {
-                [`bcs-${((view: any): string)}`]: !!view,
+                [`bcs-${view}`]: !!view,
                 'bcs-is-open': !!view,
             },
             className,
@@ -406,6 +409,7 @@ class ContentSidebar extends PureComponent<Props, State> {
                                     activitySidebarProps={activitySidebarProps}
                                     metadataSidebarProps={metadataSidebarProps}
                                     getPreview={getPreview}
+                                    features={features}
                                     getViewer={getViewer}
                                     hasSkills={hasSkills}
                                     hasDetails={hasDetails}

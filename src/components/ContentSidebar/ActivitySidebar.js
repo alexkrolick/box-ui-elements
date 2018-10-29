@@ -7,7 +7,9 @@
 import * as React from 'react';
 import debounce from 'lodash/debounce';
 import noop from 'lodash/noop';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import Button from 'box-react-ui/lib/components/button';
+import IconAddThin from 'box-react-ui/lib/icons/general/IconAddThin';
 import ActivityFeed from './ActivityFeed/activity-feed/ActivityFeed';
 import SidebarContent from './SidebarContent';
 import messages from '../messages';
@@ -20,6 +22,20 @@ import {
 } from '../../constants';
 import API from '../../api';
 import type { $AxiosXHR } from 'axios'; // eslint-disable-line
+import type { InjectIntlProvidedProps } from 'react-intl';
+import type { FeatureConfig, FeatureOptions } from './Feature';
+
+import './ActivitySidebar.scss';
+
+const AddTaskIcon = () => (
+    <IconAddThin className="add-task-icon" width={12} height={12} />
+);
+
+type TaskFeature = FeatureOptions & {
+    renderCreateTaskForm: () => React.Node,
+};
+
+type ActivitySidebarFeatures = FeatureConfig & { tasks: TaskFeature };
 
 type ExternalProps = {
     onCommentCreate?: Function,
@@ -30,19 +46,19 @@ type ExternalProps = {
     onTaskAssignmentUpdate?: Function,
     getUserProfileUrl?: string => Promise<string>,
     currentUser?: User,
-};
+} & InjectIntlProvidedProps;
 
 type PropsWithoutContext = {
     file: BoxItem,
     translations?: Translations,
     isDisabled?: boolean,
     onVersionHistoryClick?: Function,
+    features?: ActivitySidebarFeatures,
 } & ExternalProps;
 
 type Props = {
     api: API,
 } & PropsWithoutContext;
-
 type State = {
     currentUser?: User,
     approverSelectorContacts?: SelectorItems,
@@ -456,6 +472,7 @@ class ActivitySidebar extends React.PureComponent<Props, State> {
             isDisabled = false,
             onVersionHistoryClick,
             getUserProfileUrl,
+            intl,
         } = this.props;
 
         const {
@@ -469,6 +486,14 @@ class ActivitySidebar extends React.PureComponent<Props, State> {
         return (
             <SidebarContent
                 title={<FormattedMessage {...messages.sidebarActivityTitle} />}
+                actions={
+                    <React.Fragment>
+                        <Button>
+                            <AddTaskIcon />{' '}
+                            {intl.formatMessage(messages.approvalAddTask)}
+                        </Button>
+                    </React.Fragment>
+                }
             >
                 <ActivityFeed
                     file={file}
@@ -498,4 +523,4 @@ class ActivitySidebar extends React.PureComponent<Props, State> {
 
 export type ActivitySidebarProps = ExternalProps;
 export { ActivitySidebar as ActivitySidebarComponent };
-export default withErrorBoundary(withAPIContext(ActivitySidebar));
+export default injectIntl(withErrorBoundary(withAPIContext(ActivitySidebar)));

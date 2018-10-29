@@ -19,12 +19,14 @@ import {
 import type { DetailsSidebarProps } from './DetailsSidebar';
 import type { ActivitySidebarProps } from './ActivitySidebar';
 import type { MetadataSidebarProps } from './MetadataSidebar';
+import type { FeatureConfig } from './Feature';
 import './Sidebar.scss';
 
 type Props = {
     view?: SidebarView,
     currentUser?: User,
     file: BoxItem,
+    features?: FeatureConfig,
     getPreview: Function,
     getViewer: Function,
     activitySidebarProps: ActivitySidebarProps,
@@ -55,6 +57,7 @@ const Sidebar = ({
     metadataSidebarProps,
     onToggle,
     onVersionHistoryClick,
+    features,
 }: Props) => (
     <React.Fragment>
         <SidebarNav
@@ -89,6 +92,7 @@ const Sidebar = ({
                     key={file.id}
                     currentUser={currentUser}
                     file={file}
+                    features={features}
                     onVersionHistoryClick={onVersionHistoryClick}
                     {...activitySidebarProps}
                 />
