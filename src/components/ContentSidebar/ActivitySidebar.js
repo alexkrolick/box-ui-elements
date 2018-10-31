@@ -10,32 +10,27 @@ import noop from 'lodash/noop';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import Button from 'box-react-ui/lib/components/button';
 import IconAddThin from 'box-react-ui/lib/icons/general/IconAddThin';
+import type { InjectIntlProvidedProps } from 'react-intl';
 import ActivityFeed from './ActivityFeed/activity-feed/ActivityFeed';
 import SidebarContent from './SidebarContent';
 import messages from '../messages';
 import { withAPIContext } from '../APIContext';
 import { withErrorBoundary } from '../ErrorBoundary';
 import { getBadUserError, getBadItemError } from '../../util/error';
+import { FeatureFlag } from '../../util/features';
 import {
     DEFAULT_COLLAB_DEBOUNCE,
     DEFAULT_MAX_COLLABORATORS,
 } from '../../constants';
 import API from '../../api';
 import type { $AxiosXHR } from 'axios'; // eslint-disable-line
-import type { InjectIntlProvidedProps } from 'react-intl';
-import type { FeatureConfig, FeatureOptions } from './Feature';
 
 import './ActivitySidebar.scss';
 
-const AddTaskIcon = () => (
-    <IconAddThin className="add-task-icon" width={12} height={12} />
-);
-
-type TaskFeature = FeatureOptions & {
-    renderCreateTaskForm: () => React.Node,
+type TaskFeature = {
+    enabled: Boolean,
+    renderTaskForm: () => React.Node,
 };
-
-type ActivitySidebarFeatures = FeatureConfig & { tasks: TaskFeature };
 
 type ExternalProps = {
     onCommentCreate?: Function,
@@ -53,7 +48,6 @@ type PropsWithoutContext = {
     translations?: Translations,
     isDisabled?: boolean,
     onVersionHistoryClick?: Function,
-    features?: ActivitySidebarFeatures,
 } & ExternalProps;
 
 type Props = {
@@ -66,6 +60,7 @@ type State = {
     activityFeedError?: Errors,
     currentUserError?: Errors,
     feedItems?: FeedItems,
+    isTaskFormOpen: boolean,
 };
 
 export const activityFeedInlineError: Errors = {
@@ -75,7 +70,9 @@ export const activityFeedInlineError: Errors = {
     },
 };
 class ActivitySidebar extends React.PureComponent<Props, State> {
-    state = {};
+    state = {
+        isTaskFormOpen: false,
+    };
 
     componentDidMount() {
         const { currentUser } = this.props;
@@ -466,6 +463,12 @@ class ActivitySidebar extends React.PureComponent<Props, State> {
             .getAvatarUrlWithAccessToken(userId, file.id);
     };
 
+    // toggle or set
+    setTaskFormOpenState = (isOpen?: boolean) => () =>
+        this.setState(state => ({
+            isTaskFormOpen: isOpen == null ? !state.isTaskFormOpen : isOpen,
+        }));
+
     render() {
         const {
             file,
@@ -482,40 +485,61 @@ class ActivitySidebar extends React.PureComponent<Props, State> {
             feedItems,
             activityFeedError,
             currentUserError,
+            isTaskFormOpen,
         } = this.state;
+        const AddTaskButton = (
+            <FeatureFlag
+                feature="tasks"
+                enabled={() => (
+                    <Button onClick={this.setTaskFormOpenState()}>
+                        <IconAddThin
+                            className="add-task-icon"
+                            width={12}
+                            height={12}
+                        />{' '}
+                        {intl.formatMessage(messages.approvalAddTask)}
+                    </Button>
+                )}
+            />
+        );
+        const PanelContent = isTaskFormOpen ? (
+            <FeatureFlag
+                feature="tasks"
+                enabled={(taskFeature: TaskFeature) => (
+                    <div className="add-task-form">
+                        {taskFeature.renderTaskForm()}
+                    </div>
+                )}
+            />
+        ) : (
+            <ActivityFeed
+                file={file}
+                activityFeedError={activityFeedError}
+                approverSelectorContacts={approverSelectorContacts}
+                mentionSelectorContacts={mentionSelectorContacts}
+                currentUser={currentUser}
+                isDisabled={isDisabled}
+                onCommentCreate={this.createComment}
+                onCommentDelete={this.deleteComment}
+                onTaskCreate={this.createTask}
+                onTaskDelete={this.deleteTask}
+                onTaskUpdate={this.updateTask}
+                onTaskAssignmentUpdate={this.updateTaskAssignment}
+                getApproverWithQuery={this.getApproverWithQuery}
+                getMentionWithQuery={this.getMentionWithQuery}
+                onVersionHistoryClick={onVersionHistoryClick}
+                getAvatarUrl={this.getAvatarUrl}
+                getUserProfileUrl={getUserProfileUrl}
+                feedItems={feedItems}
+                currentUserError={currentUserError}
+            />
+        );
         return (
             <SidebarContent
                 title={<FormattedMessage {...messages.sidebarActivityTitle} />}
-                actions={
-                    <React.Fragment>
-                        <Button>
-                            <AddTaskIcon />{' '}
-                            {intl.formatMessage(messages.approvalAddTask)}
-                        </Button>
-                    </React.Fragment>
-                }
+                actions={<React.Fragment>{AddTaskButton}</React.Fragment>}
             >
-                <ActivityFeed
-                    file={file}
-                    activityFeedError={activityFeedError}
-                    approverSelectorContacts={approverSelectorContacts}
-                    mentionSelectorContacts={mentionSelectorContacts}
-                    currentUser={currentUser}
-                    isDisabled={isDisabled}
-                    onCommentCreate={this.createComment}
-                    onCommentDelete={this.deleteComment}
-                    onTaskCreate={this.createTask}
-                    onTaskDelete={this.deleteTask}
-                    onTaskUpdate={this.updateTask}
-                    onTaskAssignmentUpdate={this.updateTaskAssignment}
-                    getApproverWithQuery={this.getApproverWithQuery}
-                    getMentionWithQuery={this.getMentionWithQuery}
-                    onVersionHistoryClick={onVersionHistoryClick}
-                    getAvatarUrl={this.getAvatarUrl}
-                    getUserProfileUrl={getUserProfileUrl}
-                    feedItems={feedItems}
-                    currentUserError={currentUserError}
-                />
+                {PanelContent}
             </SidebarContent>
         );
     }

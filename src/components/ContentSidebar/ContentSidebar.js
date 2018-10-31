@@ -16,6 +16,7 @@ import APIContext from '../APIContext';
 import Internationalize from '../Internationalize';
 import { withErrorBoundary } from '../ErrorBoundary';
 import { SIDEBAR_FIELDS_TO_FETCH } from '../../util/fields';
+import { FeatureProvider } from '../../util/features';
 import {
     DEFAULT_HOSTNAME_API,
     CLIENT_NAME_CONTENT_SIDEBAR,
@@ -28,7 +29,7 @@ import SidebarUtils from './SidebarUtils';
 import type { DetailsSidebarProps } from './DetailsSidebar';
 import type { ActivitySidebarProps } from './ActivitySidebar';
 import type { MetadataSidebarProps } from './MetadataSidebar';
-import type { FeatureConfig } from './Feature';
+import type { FeatureConfig } from '../../util/features';
 import type { $AxiosXHR } from 'axios'; // eslint-disable-line
 import '../fonts.scss';
 import '../base.scss';
@@ -382,7 +383,7 @@ class ContentSidebar extends PureComponent<Props, State> {
         const styleClassName = classNames(
             'be bcs',
             {
-                [`bcs-${view}`]: !!view,
+                [`bcs-${view || ''}`]: !!view,
                 'bcs-is-open': !!view,
             },
             className,
@@ -402,24 +403,31 @@ class ContentSidebar extends PureComponent<Props, State> {
                     <div className="be-app-element">
                         {hasSidebar ? (
                             <APIContext.Provider value={(this.api: any)}>
-                                <Sidebar
-                                    file={((file: any): BoxItem)}
-                                    view={view}
-                                    detailsSidebarProps={detailsSidebarProps}
-                                    activitySidebarProps={activitySidebarProps}
-                                    metadataSidebarProps={metadataSidebarProps}
-                                    getPreview={getPreview}
-                                    features={features}
-                                    getViewer={getViewer}
-                                    hasSkills={hasSkills}
-                                    hasDetails={hasDetails}
-                                    hasMetadata={hasMetadata}
-                                    hasActivityFeed={hasActivityFeed}
-                                    onToggle={this.onToggle}
-                                    onVersionHistoryClick={
-                                        onVersionHistoryClick
-                                    }
-                                />
+                                <FeatureProvider features={features}>
+                                    <Sidebar
+                                        file={((file: any): BoxItem)}
+                                        view={view}
+                                        detailsSidebarProps={
+                                            detailsSidebarProps
+                                        }
+                                        activitySidebarProps={
+                                            activitySidebarProps
+                                        }
+                                        metadataSidebarProps={
+                                            metadataSidebarProps
+                                        }
+                                        getPreview={getPreview}
+                                        getViewer={getViewer}
+                                        hasSkills={hasSkills}
+                                        hasDetails={hasDetails}
+                                        hasMetadata={hasMetadata}
+                                        hasActivityFeed={hasActivityFeed}
+                                        onToggle={this.onToggle}
+                                        onVersionHistoryClick={
+                                            onVersionHistoryClick
+                                        }
+                                    />
+                                </FeatureProvider>
                             </APIContext.Provider>
                         ) : (
                             <div className="bcs-loading">
