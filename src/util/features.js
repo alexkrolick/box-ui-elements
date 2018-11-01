@@ -41,18 +41,23 @@ function FeatureFlag({
     feature,
     enabled = () => null,
     disabled = () => null,
+    children,
 }: {
     feature: string,
     enabled?: FeatureOptions => React.Node,
     disabled?: FeatureOptions => React.Node,
+    children?: (Boolean, FeatureOptions) => React.Node,
 }) {
     return (
         <FeatureContext.Consumer>
-            {features =>
-                isFeatureEnabled(features, feature)
-                    ? enabled(getFeatureConfig(features, feature))
-                    : disabled(getFeatureConfig(features, feature))
-            }
+            {features => {
+                const isEnabled = isFeatureEnabled(features, feature);
+                const featureConfig = getFeatureConfig(features, feature);
+                if (children) return children(isEnabled, featureConfig);
+                return isEnabled
+                    ? enabled(featureConfig)
+                    : disabled(featureConfig);
+            }}
         </FeatureContext.Consumer>
     );
 }
