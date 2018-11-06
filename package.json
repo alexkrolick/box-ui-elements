@@ -112,7 +112,7 @@
     "roots": [
       "src"
     ],
-    "setupTestFrameworkScriptFile": "<rootDir>/build/enzyme-adapter.js",
+    "setupTestFrameworkScriptFile": "<rootDir>/build/jest-setup.js",
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ]
@@ -175,6 +175,7 @@
     "eslint-plugin-react": "^7.8.2",
     "filesize": "^3.6.1",
     "flow-bin": "^0.80.0",
+    "flow-typed": "^2.5.1",
     "form-serialize": "^0.7.2",
     "husky": "^1.1.2",
     "immutable": "^3.7.4",
