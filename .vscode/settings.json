@@ -1,12 +1,25 @@
-// Place your settings in this file to overwrite default and user settings.
 {
-    "typescript.validate.enable": false,
-    "typescript.format.enable": false,
+    "eslint.autoFixOnSave": false,
+    "eslint.enable": true,
+    "eslint.packageManager": "yarn",
+    "eslint.provideLintTask": false,
+    "files.exclude": {
+        "node_modules": true
+    },
     "flow.useNPMPackagedFlow": true,
-    "flow.enabled": true,
     "javascript.validate.enable": false,
-    "prettier.eslintIntegration": true,
-    "prettier.printWidth": 120,
-    "prettier.tabWidth": 4,
-    "prettier.singleQuote": true
+    "prettier.requireConfig": true,
+    "search.exclude": {
+        ".cache": true,
+        ".vscode": true,
+        "**/node_modules": true,
+        "commonjs": true,
+        "coverage": true,
+        "dist": true,
+        "es": true,
+        "flow-typed": true,
+        "i18n": true,
+        "reports": true
+    },
+    "typescript.validate.enable": false
 }
