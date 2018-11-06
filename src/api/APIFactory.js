@@ -478,7 +478,7 @@ class APIFactory {
      * @param {boolean} shouldDestroy - true if the factory should destroy before returning the call
      * @return {FeedAPI} FeedAPI instance
      */
-    getFeedAPI(shouldDestroy: Boolean): FeedAPI {
+    getFeedAPI(shouldDestroy: boolean): FeedAPI {
         if (shouldDestroy) {
             this.destroy();
         }

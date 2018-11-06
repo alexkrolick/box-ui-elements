@@ -2,6 +2,14 @@
 
 exports[`components/ContentSidebar/ActivitySidebar render() should render the activity feed sidebar 1`] = `
 <SidebarContent
+  actions={
+    <React.Fragment>
+      <FeatureFlag
+        enabled={[Function]}
+        feature="tasks"
+      />
+    </React.Fragment>
+  }
   title={
     <FormattedMessage
       defaultMessage="Activity"

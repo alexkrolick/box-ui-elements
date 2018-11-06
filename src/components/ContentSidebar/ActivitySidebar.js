@@ -70,9 +70,12 @@ export const activityFeedInlineError: Errors = {
     },
 };
 class ActivitySidebar extends React.PureComponent<Props, State> {
-    state = {
-        isTaskFormOpen: false,
-    };
+    constructor(props: Props) {
+        super(props);
+        this.state = {
+            isTaskFormOpen: false,
+        };
+    }
 
     componentDidMount() {
         const { currentUser } = this.props;
