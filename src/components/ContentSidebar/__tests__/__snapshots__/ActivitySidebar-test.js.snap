@@ -17,6 +17,10 @@ exports[`components/ContentSidebar/ActivitySidebar render() should render the ac
     />
   }
 >
+  <FeatureFlag
+    enabled={[Function]}
+    feature="tasks"
+  />
   <ActivityFeed
     file={
       Object {

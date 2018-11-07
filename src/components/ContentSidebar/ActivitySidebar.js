@@ -490,6 +490,7 @@ class ActivitySidebar extends React.PureComponent<Props, State> {
             currentUserError,
             isTaskFormOpen,
         } = this.state;
+
         const AddTaskButton = (
             <FeatureFlag
                 feature="tasks"
@@ -505,49 +506,54 @@ class ActivitySidebar extends React.PureComponent<Props, State> {
                 )}
             />
         );
-        const PanelContent = isTaskFormOpen ? (
+
+        const TaskForm = (
             <FeatureFlag
                 feature="tasks"
                 enabled={(taskFeature: TaskFeature) => (
                     <div className="add-task-form">
-                        {taskFeature.renderTaskForm()}
+                        {isTaskFormOpen && taskFeature.renderTaskForm()}
                     </div>
                 )}
             />
-        ) : (
-            <ActivityFeed
-                file={file}
-                activityFeedError={activityFeedError}
-                approverSelectorContacts={approverSelectorContacts}
-                mentionSelectorContacts={mentionSelectorContacts}
-                currentUser={currentUser}
-                isDisabled={isDisabled}
-                onCommentCreate={this.createComment}
-                onCommentDelete={this.deleteComment}
-                onTaskCreate={this.createTask}
-                onTaskDelete={this.deleteTask}
-                onTaskUpdate={this.updateTask}
-                onTaskAssignmentUpdate={this.updateTaskAssignment}
-                getApproverWithQuery={this.getApproverWithQuery}
-                getMentionWithQuery={this.getMentionWithQuery}
-                onVersionHistoryClick={onVersionHistoryClick}
-                getAvatarUrl={this.getAvatarUrl}
-                getUserProfileUrl={getUserProfileUrl}
-                feedItems={feedItems}
-                currentUserError={currentUserError}
-            />
         );
+
         return (
             <SidebarContent
                 title={<FormattedMessage {...messages.sidebarActivityTitle} />}
                 actions={<React.Fragment>{AddTaskButton}</React.Fragment>}
             >
-                {PanelContent}
+                {TaskForm}
+                <ActivityFeed
+                    file={file}
+                    activityFeedError={activityFeedError}
+                    approverSelectorContacts={approverSelectorContacts}
+                    mentionSelectorContacts={mentionSelectorContacts}
+                    currentUser={currentUser}
+                    isDisabled={isDisabled}
+                    onCommentCreate={this.createComment}
+                    onCommentDelete={this.deleteComment}
+                    onTaskCreate={this.createTask}
+                    onTaskDelete={this.deleteTask}
+                    onTaskUpdate={this.updateTask}
+                    onTaskAssignmentUpdate={this.updateTaskAssignment}
+                    getApproverWithQuery={this.getApproverWithQuery}
+                    getMentionWithQuery={this.getMentionWithQuery}
+                    onVersionHistoryClick={onVersionHistoryClick}
+                    getAvatarUrl={this.getAvatarUrl}
+                    getUserProfileUrl={getUserProfileUrl}
+                    feedItems={feedItems}
+                    currentUserError={currentUserError}
+                />
             </SidebarContent>
         );
     }
 }
 
 export type ActivitySidebarProps = ExternalProps;
-export { ActivitySidebar as ActivitySidebarComponent };
-export default injectIntl(withErrorBoundary(withAPIContext(ActivitySidebar)));
+const ConnectedActivitySidebar = withErrorBoundary(injectIntl(ActivitySidebar));
+export {
+    ActivitySidebar as ActivitySidebarComponent,
+    ConnectedActivitySidebar,
+};
+export default withAPIContext(ConnectedActivitySidebar);

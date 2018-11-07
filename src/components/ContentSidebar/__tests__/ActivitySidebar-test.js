@@ -1,7 +1,11 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+/* eslint-disable import/named */
+import { render, fireEvent } from '../../../../test-utils';
+import { FeatureProvider } from '../../../util/features';
 import {
     ActivitySidebarComponent,
+    ConnectedActivitySidebar,
     activityFeedInlineError,
 } from '../ActivitySidebar';
 import messages from '../../messages';
@@ -465,6 +469,43 @@ describe('components/ContentSidebar/ActivitySidebar', () => {
                 currentUser.id,
                 file.id,
             );
+        });
+    });
+
+    describe('Tasks in Activity Sidebar', () => {
+        test('can add a task when feature is enabled', async () => {
+            const mockRenderTaskForm = jest.fn(() => (
+                <form aria-label="New Task Information" />
+            ));
+            const features = {
+                tasks: {
+                    enabled: true,
+                    renderTaskForm: mockRenderTaskForm,
+                },
+            };
+            const { getByText } = render(
+                <FeatureProvider features={features}>
+                    <ConnectedActivitySidebar api={api} file={file} />
+                </FeatureProvider>,
+            );
+            const addTaskBtn = getByText('Add Task');
+            expect(addTaskBtn).toBeInTheDocument();
+
+            await fireEvent.click(addTaskBtn);
+            expect(mockRenderTaskForm).toHaveBeenCalled();
+        });
+
+        test('hides "add tasks" button when feature is disabled', () => {
+            const features = {
+                tasks: { enabled: false, renderTaskForm: jest.fn() },
+            };
+            const { queryByText } = render(
+                <FeatureProvider features={features}>
+                    <ConnectedActivitySidebar api={api} file={file} />
+                </FeatureProvider>,
+            );
+            const addTaskBtn = queryByText('AddTask');
+            expect(addTaskBtn).toBeNull();
         });
     });
 });
