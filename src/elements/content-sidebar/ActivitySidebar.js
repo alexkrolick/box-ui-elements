@@ -254,7 +254,7 @@ class ActivitySidebar extends React.PureComponent<Props, State> {
      * @param {number} dueAt - Task's due date
      * @return {void}
      */
-    createTask = (message: string, assignees: SelectorItems, dueAt: string): void => {
+    createTask = (message: string, assignees: SelectorItems, dueAt: ?string): void => {
         const { currentUser } = this.state;
         const { file, api } = this.props;
 

@@ -16,6 +16,7 @@ import type { ContentSidebarProps } from '../src/components/ContentSidebar';
 import type { ContentOpenWithProps } from '../src/components/ContentOpenWithProps';
 import type { ContentPreviewProps } from '../src/components/ContentPreview';
 import type { FeatureConfig } from '../FeatureChecking';
+import type { Element } from "react";
 import {
     ACCESS_OPEN,
     ACCESS_COLLAB,
