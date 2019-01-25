@@ -451,15 +451,13 @@ class ActivitySidebar extends React.PureComponent<Props, State> {
 
     renderAddTaskButton = () => {
         const { isDisabled } = this.props;
-        const { approverSelectorContacts, mentionSelectorContacts } = this.state;
-        const { createTask, getApproverWithQuery, getMentionWithQuery, getAvatarUrl } = this;
+        const { approverSelectorContacts } = this.state;
+        const { createTask, getApproverWithQuery, getAvatarUrl } = this;
         const props = {
             isDisabled,
             createTask,
             getApproverWithQuery,
-            getMentionWithQuery,
             approverSelectorContacts,
-            mentionSelectorContacts,
             getAvatarUrl,
         };
         return <AddTaskButton {...props} />;
