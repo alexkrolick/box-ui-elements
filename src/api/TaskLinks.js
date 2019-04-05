@@ -8,6 +8,11 @@ import Base from './Base';
 import { ERROR_CODE_CREATE_TASK_LINK } from '../constants';
 
 class TaskLinks extends Base {
+    // for prerelease dev
+    getBaseApiUrl() {
+        return '/api/2.0/';
+    }
+
     getUrlForTaskLinkCreate(): string {
         return `${this.getBaseApiUrl()}/undoc/task_links`;
     }
