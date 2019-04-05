@@ -14,6 +14,11 @@ import {
 } from '../constants';
 
 class TasksNew extends Base {
+    // for prerelease dev
+    getBaseApiUrl() {
+        return '/api/2.0/';
+    }
+
     getUrlForFileTasks(id: string): string {
         return `${this.getBaseApiUrl()}/undoc/files/${id}/linked_tasks?limit=${API_PAGE_LIMIT}`;
     }
