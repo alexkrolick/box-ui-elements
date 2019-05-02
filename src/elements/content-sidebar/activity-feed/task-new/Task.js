@@ -142,7 +142,7 @@ const Task = ({
                     <Status status={status} />
                 </div>
                 <div className="bcs-task-content">
-                    <Assignees maxAvatars={3} assignees={assigned_to} getAvatarUrl={getAvatarUrl} />
+                    <Assignees taskId={id} maxAvatars={3} assignees={assigned_to} getAvatarUrl={getAvatarUrl} />
                 </div>
                 <div className="bcs-task-content">
                     {currentUserAssignment && shouldShowActions && (

@@ -49,6 +49,7 @@ class MarkerBasedApi extends Base {
         limit: number,
         shouldFetchAll: boolean,
         requestData: Object = {},
+        url?: string,
     ): Promise<void> {
         if (this.isDestroyed()) {
             return;
@@ -56,15 +57,15 @@ class MarkerBasedApi extends Base {
 
         // Make the XHR request
         try {
-            const url = this.getUrl(id);
+            const apiUrl = url || this.getUrl(id);
             const queryParams: Params = {
                 ...requestData,
-                marker,
+                marker: marker || undefined,
                 limit,
             };
 
             const { data }: { data: Data } = await this.xhr.get({
-                url,
+                url: apiUrl,
                 id: getTypedFileId(id),
                 params: queryParams,
             });
@@ -76,7 +77,7 @@ class MarkerBasedApi extends Base {
             };
             const nextMarker = data.next_marker;
             if (shouldFetchAll && this.hasMoreItems(nextMarker)) {
-                this.markerGetRequest(id, nextMarker, limit, shouldFetchAll, requestData);
+                this.markerGetRequest(id, nextMarker, limit, shouldFetchAll, requestData, apiUrl);
                 return;
             }
 
@@ -105,6 +106,7 @@ class MarkerBasedApi extends Base {
         limit = 1000,
         requestData,
         shouldFetchAll = true,
+        url,
     }: {
         errorCallback: ElementsErrorCallback,
         id: string,
@@ -113,11 +115,12 @@ class MarkerBasedApi extends Base {
         requestData?: Object,
         shouldFetchAll?: boolean,
         successCallback: Function,
+        url?: string,
     }): Promise<void> {
         this.successCallback = successCallback;
         this.errorCallback = errorCallback;
 
-        return this.markerGetRequest(id, marker, limit, shouldFetchAll, requestData);
+        return this.markerGetRequest(id, marker, limit, shouldFetchAll, requestData, url);
     }
 }
 

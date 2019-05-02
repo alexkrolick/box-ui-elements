@@ -3,6 +3,8 @@ import * as React from 'react';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import type { InjectIntlProvidedProps } from 'react-intl';
 import uniqueId from 'lodash/uniqueId';
+import withAPIContext from '../../../common/api-context/withAPIContext';
+import APIFactory from '../../../../api/APIFactory';
 import { Flyout, Overlay } from '../../../../components/flyout';
 import Tooltip from '../../../../components/tooltip';
 import PlainButton from '../../../../components/plain-button';
@@ -13,11 +15,18 @@ import { TASK_NEW_APPROVED, TASK_NEW_REJECTED, TASK_NEW_COMPLETED, TASK_NEW_NOT_
 
 const MAX_AVATARS = 3;
 
+type APIProvidedProps = {
+    api: APIFactory,
+};
 type Props = {|
     assignees: TaskAssigneeCollection,
     getAvatarUrl: GetAvatarUrlCallback,
+    id: string,
     maxAvatars: number,
-|} & InjectIntlProvidedProps;
+|} & InjectIntlProvidedProps &
+    APIProvidedProps;
+
+type State = TaskAssigneeCollection;
 
 const statusMessages = {
     [TASK_NEW_APPROVED]: messages.tasksFeedStatusAccepted,
@@ -45,12 +54,31 @@ const AssignmentDetails = React.memo(({ user, status, completedAt, className }) 
 });
 
 /* eslint-disable react/prefer-stateless-function */
-class Assignees extends React.Component<Props> {
+class Assignees extends React.Component<Props, State> {
     static defaultProps = {
         maxAvatars: MAX_AVATARS,
     };
 
+    state = {
+        entries: [],
+        limit: 2,
+        next_marker: null,
+    };
+
     listTitleId = `task-assignment-list-title-${uniqueId()}`;
+
+    componentDidMount() {
+        const { api, fileId = '446245267450', taskId = '' } = this.props;
+        const { limit, next_marker } = this.state;
+        api.getTaskCollaboratorsAPI(false).getTaskCollaborators({
+            errorCallback: console.error,
+            successCallback: console.log,
+            file: { id: fileId },
+            task: { id: taskId },
+            marker: next_marker || '',
+            limit,
+        });
+    }
 
     render() {
         const { maxAvatars, assignees = {}, getAvatarUrl, intl } = this.props;
@@ -133,4 +161,4 @@ class Assignees extends React.Component<Props> {
     }
 }
 
-export default injectIntl(Assignees);
+export default withAPIContext(injectIntl(Assignees));

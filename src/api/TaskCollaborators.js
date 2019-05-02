@@ -5,18 +5,19 @@
  */
 import omit from 'lodash/omit';
 
-import Base from './Base';
+// The task collab API uses marker-based pagination
+// instead of the Base API, use this:
+import MarkerAPI from './MarkerBasedAPI';
 import {
     ERROR_CODE_FETCH_TASK_COLLABORATOR,
     ERROR_CODE_CREATE_TASK_COLLABORATOR,
     ERROR_CODE_UPDATE_TASK_COLLABORATOR,
     ERROR_CODE_DELETE_TASK_COLLABORATOR,
-    API_PAGE_LIMIT,
 } from '../constants';
 
-class TaskCollaborators extends Base {
+class TaskCollaborators extends MarkerAPI {
     getUrlForTaskCollaborators(taskId: string): string {
-        return `${this.getBaseApiUrl()}/undoc/tasks/${taskId}/task_collaborators?limit=${API_PAGE_LIMIT}`;
+        return `${this.getBaseApiUrl()}/undoc/tasks/${taskId}/task_collaborators`;
     }
 
     getUrlForTaskCollaboratorCreate(): string {
@@ -69,15 +70,24 @@ class TaskCollaborators extends Base {
         file,
         successCallback,
         task,
+        limit,
+        marker,
     }: {
         errorCallback: ElementsErrorCallback,
         file: { id: string },
+        limit?: number,
+        marker?: string,
         successCallback: Function,
         task: { id: string },
     }): void {
         this.errorCode = ERROR_CODE_FETCH_TASK_COLLABORATOR;
         const url = this.getUrlForTaskCollaborators(task.id);
-        this.get({ id: file.id, successCallback, errorCallback, url });
+        // Single-Page GET with default pagination params
+        // this.get({ id: file.id, successCallback, errorCallback, url });
+
+        // Paginated GET
+        const shouldFetchAll = true;
+        this.markerGet({ id: file.id, successCallback, errorCallback, url, limit, marker, shouldFetchAll });
     }
 
     updateTaskCollaborator({
