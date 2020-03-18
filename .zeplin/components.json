@@ -1,0 +1,102 @@
+{
+    "projects": ["5c66138bb3562d463f57615e"],
+    "styleguides": ["5d0a6fa62b90ef2cf82ee92d"],
+    "github": {
+        "repository": "box/box-ui-elements"
+    },
+    "plugins": [
+        {
+            "name": "@zeplin/cli-connect-storybook-plugin",
+            "config": {
+                "url": "https://opensource.box.com/box-ui-elements/storybook"
+            }
+        }
+    ],
+    "components": [
+        {
+            "path": "src/components/primary-button/PrimaryButton.tsx",
+            "zeplinNames": ["Button/Primary/Default", "Button/Primary/Hover"]
+        },
+        {
+            "path": "src/components/button/Button.tsx",
+            "zeplinNames": ["Button/Secondary/Default", "Button/Secondary/Hover"]
+        },
+        {
+            "path": "src/components/inline-notice/InlineNotice.js",
+            "zeplinNames": [
+                "Inline Notice/Success",
+                "Inline Notice/Error",
+                "Inline Notice/Info",
+                "Inline Notice/Warning",
+                "Inline Notice/Generic"
+            ]
+        },
+        {
+            "path": "src/components/label-pill/LabelPill.tsx",
+            "zeplinNames": ["Pill/Default", "Pill/With Icon", "Pill/With Action"]
+        },
+        {
+            "path": "src/components/avatar/Avatar.tsx",
+            "zeplinNames": ["Avatar/Initials", "Avatar/Aaron"]
+        },
+        {
+            "path": "src/components/text-input/TextInput.js",
+            "zeplinNames": [
+                "Text Input/Init",
+                "Text Input/Error",
+                "Text Input/Active",
+                "Text Input/Disabled",
+                "Text Input/Completed"
+            ]
+        },
+        {
+            "path": "src/components/pill-selector-dropdown/PillSelectorDropdown.js",
+            "zeplinNames": ["Invite/Init", "Invite/Active"]
+        },
+        {
+            "path": "src/components/dropdown-menu/DropdownMenu.js",
+            "zeplinNames": [
+                "Dropdown/Init",
+                "Dropdown/Error",
+                "Dropdown/Active",
+                "Dropdown/Disabled",
+                "Dropdown/List Popover"
+            ]
+        },
+        {
+            "path": "src/components/date-picker/DatePicker.js",
+            "zeplinNames": [
+                "Date Picker/Init",
+                "Date Picker/Active",
+                "Date Picker/Completed",
+                "Date Picker/Calendar Popover"
+            ]
+        },
+        {
+            "path": "src/components/radio/RadioButton.tsx",
+            "zeplinNames": [
+                "Radio Button/Enabled/Selected",
+                "Radio Button/Disabled/Selected",
+                "Radio Button/Enabled/Unselected",
+                "Radio Button/Disabled/Unselected"
+            ]
+        },
+        {
+            "path": "src/components/toggle/Toggle.js",
+            "zeplinNames": ["Toggle/Enabled/On", "Toggle/Enabled/Off", "Toggle/Disabled/On", "Toggle/Disabled/Off"]
+        },
+        {
+            "path": "src/components/checkbox/Checkbox.tsx",
+            "zeplinNames": [
+                "Checkbox/Enabled/Selected",
+                "Checkbox/Disabled/Selected",
+                "Checkbox/Enabled/Unselected",
+                "Checkbox/Disabled/Unselected"
+            ]
+        },
+        {
+            "path": "src/components/loading-indicator/LoadingIndicator.tsx",
+            "zeplinNames": ["Loader/Blue", "Loader/Gray"]
+        }
+    ]
+}
