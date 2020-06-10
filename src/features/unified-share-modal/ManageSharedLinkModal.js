@@ -68,6 +68,7 @@ function ManageSharedLinkModal(props: Props) {
                                 }
                                 createdBy {
                                     name
+                                    publicName
                                 }
                             }
                         }
@@ -119,7 +120,13 @@ function ManageSharedLinkModal(props: Props) {
                             const usesCount = Math.ceil(Math.random() * (link.maxUses || 1));
                             return (
                                 <tr key={link.id}>
-                                    <td>{link.createdBy.name}</td>
+                                    <td>
+                                        {link.createdBy.publicName}
+                                        <br />
+                                        <small>
+                                            <ReadableTime timestamp={new Date(link.createdAt).getTime()} />
+                                        </small>
+                                    </td>
                                     <td>{link.maxUses ? `${usesCount}/${link.maxUses}` : `${usesCount}`}</td>
                                     <td>
                                         {link.expiration ? (
