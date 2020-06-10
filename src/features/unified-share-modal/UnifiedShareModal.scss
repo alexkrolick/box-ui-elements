@@ -182,11 +182,15 @@
         }
 
         .shared-link-settings-btn-container {
-            flex: 0 1 20%;
+            flex: 1 1 20%;
             text-align: right;
 
-            .shared-link-settings-btn {
+            .shared-manage-btn {
                 margin-left: 5px;
+            }
+
+            .shared-manage-btn,
+            .shared-link-settings-btn {
                 color: $primary-color;
                 white-space: nowrap;
             }
@@ -290,4 +294,8 @@
     margin: ($bdl-grid-unit * 5) 0;
     border: none;
     border-top: 1px solid $bdl-gray-20;
+}
+
+.bdl-SharedLinkSection-label {
+    width: 200px;
 }

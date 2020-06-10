@@ -531,6 +531,7 @@ class UnifiedShareForm extends React.Component<USFProps, State> {
                             onDismissTooltip={onDismissTooltip}
                             onEmailSharedLinkClick={this.openEmailSharedLinkForm}
                             onSettingsClick={onSettingsClick}
+                            onManageClick={() => {}}
                             onToggleSharedLink={this.onToggleSharedLink}
                             onCopyInit={onCopyInit}
                             onCopySuccess={onCopySuccess}

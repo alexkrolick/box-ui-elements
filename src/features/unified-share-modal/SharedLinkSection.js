@@ -47,6 +47,7 @@ type Props = {
     onCopySuccess?: () => void,
     onDismissTooltip: (componentIdentifier: tooltipComponentIdentifierType) => void,
     onEmailSharedLinkClick: Function,
+    onManageClick?: Function,
     onSettingsClick?: Function,
     onToggleSharedLink: Function,
     sharedLink: sharedLinkType,
@@ -254,7 +255,7 @@ class SharedLinkSection extends React.Component<Props, State> {
                     </Tooltip>
                 </div>
 
-                <div className="shared-link-access-row">
+                {/* <div className="shared-link-access-row">
                     <SharedLinkAccessMenu
                         accessLevel={accessLevel}
                         accessLevelsDisabledReason={accessLevelsDisabledReason}
@@ -291,7 +292,7 @@ class SharedLinkSection extends React.Component<Props, State> {
                             </PlainButton>
                         </Tooltip>
                     )}
-                </div>
+                </div> */}
                 {accessLevel === ANYONE_WITH_LINK && (
                     <div className="security-indicator-note">
                         <span className="security-indicator-icon-globe">
@@ -309,6 +310,7 @@ class SharedLinkSection extends React.Component<Props, State> {
             intl,
             onDismissTooltip,
             onSettingsClick,
+            onManageClick,
             showSharedLinkSettingsCallout,
             trackingProps,
             tooltips,
@@ -317,6 +319,15 @@ class SharedLinkSection extends React.Component<Props, State> {
 
         return (
             <div className="shared-link-settings-btn-container">
+                <PlainButton
+                    aria-label={intl.formatMessage(messages.sharedLinkManageLabel)}
+                    className="shared-manage-btn"
+                    onClick={onManageClick}
+                    type="button"
+                >
+                    <FormattedMessage {...messages.sharedLinkManage} />
+                </PlainButton>
+                &nbsp;|&nbsp;
                 <Tooltip
                     className="usm-ftux-tooltip"
                     isShown={!!tooltips['shared-link-settings'] || showSharedLinkSettingsCallout}
@@ -449,14 +460,14 @@ class SharedLinkSection extends React.Component<Props, State> {
         return (
             <div>
                 <hr className="bdl-SharedLinkSection-separator" />
-                {/* eslint-disable-next-line jsx-a11y/label-has-for */}
-                <label>
-                    <span className="label bdl-Label">
-                        <FormattedMessage {...messages.sharedLinkSectionLabel} />
-                    </span>
-                </label>
                 <div className="shared-link-toggle-row">
-                    {this.renderToggle()}
+                    {/* eslint-disable-next-line jsx-a11y/label-has-for */}
+                    <label className="bdl-SharedLinkSection-label">
+                        <span className="label bdl-Label">
+                            <FormattedMessage {...messages.sharedLinkSectionLabel} />
+                        </span>
+                    </label>
+                    {/* {this.renderToggle()} */}
                     {isSharedLinkEnabled && onSettingsClick && this.renderSharedLinkSettingsLink()}
                 </div>
                 {isSharedLinkEnabled && this.renderSharedLink()}

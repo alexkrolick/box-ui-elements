@@ -255,6 +255,17 @@ const messages = defineMessages({
         description: 'Label for link to upgrade to get more access controls for inviting collaborators to an item',
         id: 'boxui.unifiedShare.upgradeGetMoreAccessControlsLink',
     },
+
+    sharedLinkManageLabel: {
+        defaultMessage: 'Open manage shared links popup',
+        description: 'Accessible label for button that loads manage popup',
+        id: 'boxui.unifiedShare.sharedLinkManageLabel',
+    },
+    sharedLinkManage: {
+        defaultMessage: 'Manage',
+        description: 'Description of the shared link manage link',
+        id: 'boxui.unifiedShare.sharedLinkManage',
+    },
     sharedLinkSettings: {
         defaultMessage: 'Link Settings',
         description: 'Description of the shared link settings modal entry point. This shows link-specific options.',
