@@ -62,6 +62,7 @@ type State = {
     hasFetchedSharedLinkFromGraphQL: boolean,
     isAutoCreatingSharedLink: boolean,
     isCopySuccessful: ?boolean,
+    overrideShareLink: ?string,
 };
 
 class SharedLinkSection extends React.Component<Props, State> {
@@ -77,6 +78,7 @@ class SharedLinkSection extends React.Component<Props, State> {
             isAutoCreatingSharedLink: false,
             hasFetchedSharedLinkFromGraphQL: false,
             isCopySuccessful: null,
+            overrideShareLink: null,
         };
     }
 
@@ -139,21 +141,30 @@ class SharedLinkSection extends React.Component<Props, State> {
             }).then(async result => {
                 const results = await result.json();
 
-                if (!results || !results.data || !results.data.shareLinkPrimaryByItem) {
-                    // Fire and forget
-                    fetch('/app-api/graphql', {
-                        headers: {
-                            accept: '*/*',
-                            'accept-language': 'en-US,en;q=0.9',
-                            'content-type': 'application/json',
-                        },
-                        referrerPolicy: 'no-referrer',
-                        body: `{"operationName":null,"variables":{},"query":"mutation {\\n  createShareLink(input: {itemId: \\"${item.id}\\", itemType: \\"${item.type}\\"}) {\\n    id\\n    shareName\\n    createdAt\\n    item {\\n      name\\n    }\\n    createdBy {\\n      name\\n    }\\n  }\\n}\\n"}`,
-                        method: 'POST',
-                        mode: 'cors',
-                        credentials: 'include',
-                    });
+                if (results && results.data && results.data.shareLinkPrimaryByItem) {
+                    this.setState({ overrideShareLink: results.data.shareLinkPrimaryByItem.shareName });
+                    return;
                 }
+
+                // Fire and forget
+                fetch('/app-api/graphql', {
+                    headers: {
+                        accept: '*/*',
+                        'accept-language': 'en-US,en;q=0.9',
+                        'content-type': 'application/json',
+                    },
+                    referrerPolicy: 'no-referrer',
+                    body: `{"operationName":null,"variables":{},"query":"mutation {\\n  createShareLink(input: {itemId: \\"${item.id}\\", itemType: \\"${item.type}\\"}) {\\n    id\\n    shareName\\n    createdAt\\n    item {\\n      name\\n    }\\n    createdBy {\\n      name\\n    }\\n  }\\n}\\n"}`,
+                    method: 'POST',
+                    mode: 'cors',
+                    credentials: 'include',
+                }).then(async result2 => {
+                    const shareData = await result2.json();
+
+                    if (shareData && shareData.data && shareData.data.createShareLink) {
+                        this.setState({ overrideShareLink: shareData.data.createShareLink.shareName });
+                    }
+                });
             });
         }
 
@@ -218,7 +229,7 @@ class SharedLinkSection extends React.Component<Props, State> {
             tooltips,
         } = this.props;
 
-        const { isCopySuccessful } = this.state;
+        const { isCopySuccessful, overrideShareLink } = this.state;
 
         const {
             accessLevel,
@@ -231,6 +242,12 @@ class SharedLinkSection extends React.Component<Props, State> {
             permissionLevel,
             url,
         } = sharedLink;
+
+        let shareUrl = url;
+
+        if (overrideShareLink) {
+            shareUrl = shareUrl.replace(/[^\/]+$/, overrideShareLink);
+        }
 
         const {
             copyButtonProps,
@@ -286,7 +303,7 @@ class SharedLinkSection extends React.Component<Props, State> {
                             onCopySuccess={onSharedLinkCopy}
                             triggerCopyOnLoad={shouldTriggerCopyOnLoad}
                             type="url"
-                            value={url}
+                            value={shareUrl}
                         />
                     </Tooltip>
                     <Tooltip position="top-left" text={<FormattedMessage {...messages.sendSharedLink} />}>
