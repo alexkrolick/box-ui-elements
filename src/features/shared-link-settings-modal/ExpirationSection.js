@@ -29,14 +29,14 @@ const ExpirationSection = ({
     const now = new Date().getTime();
     const datepicker = (
         <p>
-            <Select name="expiration" label="Expires After" className="mll">
+            <Select name="expiration" label="Expires After" className="mll mrl">
                 <option value="-1">Never</option>
                 <option value={new Date(now + 60 * 60 * 1000)}>1 hour</option>
                 <option value={new Date(now + 60 * 60 * 1000 * 24 * 1)}>1 day</option>
                 <option value={new Date(now + 60 * 60 * 1000 * 24 * 7)}>1 week</option>
                 <option value={new Date(now + 60 * 60 * 1000 * 24 * 30)}>30 days</option>
             </Select>
-            <Select name="expiration-uses" label="Max Number of Uses" className="mll">
+            <Select name="expiration-uses" label="Max Number of Uses" className="mll mrl">
                 <option>Unlimited</option>
                 <option>1</option>
                 <option>2</option>
