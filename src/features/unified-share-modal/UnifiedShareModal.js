@@ -195,9 +195,11 @@ class UnifiedShareModal extends React.Component<USMProps, State> {
                 {isManageLinksModalOpen && (
                     <ManageSharedLinkModal
                         isOpen={isManageLinksModalOpen}
+                        item={item}
                         onRequestClose={() => {
                             this.setState({ isManageLinksModalOpen: false });
                         }}
+                        className="bdl-ManageSharedLinkModal"
                     />
                 )}
             </>

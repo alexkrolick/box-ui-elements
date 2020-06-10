@@ -299,3 +299,42 @@
 .bdl-SharedLinkSection-label {
     width: 200px;
 }
+
+.bdl-ManageSharedLinkModal {
+    .modal-dialog {
+        width: 750px;
+        max-width: 100%;
+    }
+
+    .table {
+        th {
+            font-weight: bold;
+        }
+
+        th,
+        td {
+            padding: .5em;
+        }
+
+        tr {
+            border-bottom: 1px solid $bdl-gray-05;
+
+            &:hover,
+            &:focus-within {
+                .bdl-sharedlink-revoke {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}
+
+.bdl-sharedLink-revoke {
+    opacity: 0;
+    transition: $bdl-transitionDurationBase;
+
+    &:hover,
+    &:focus {
+        opacity: 1;
+    }
+}
