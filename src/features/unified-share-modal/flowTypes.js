@@ -310,6 +310,8 @@ export type USFProps = BaseUnifiedShareProps & {
     handleFtuxCloseClick: () => void,
     /** Whether the data for the USM/USF is being fetched */
     isFetching: boolean,
+    /** what to do when clicking the manage links button */
+    onManageClick: () => void,
     /** Function for opening the Remove Link Confirm Modal */
     openConfirmModal: () => void,
     /** Whether the shared link has loaded */

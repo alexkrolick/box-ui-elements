@@ -499,6 +499,7 @@ class UnifiedShareForm extends React.Component<USFProps, State> {
             submitting,
             tooltips = {},
             trackingProps,
+            onManageClick,
         } = this.props;
         const { sharedLinkTracking, sharedLinkEmailTracking } = trackingProps;
         const { isEmailLinkSectionExpanded, isInviteSectionExpanded, showCollaboratorList } = this.state;
@@ -531,7 +532,7 @@ class UnifiedShareForm extends React.Component<USFProps, State> {
                             onDismissTooltip={onDismissTooltip}
                             onEmailSharedLinkClick={this.openEmailSharedLinkForm}
                             onSettingsClick={onSettingsClick}
-                            onManageClick={() => {}}
+                            onManageClick={onManageClick}
                             onToggleSharedLink={this.onToggleSharedLink}
                             onCopyInit={onCopyInit}
                             onCopySuccess={onCopySuccess}
