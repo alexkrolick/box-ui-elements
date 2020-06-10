@@ -25,27 +25,39 @@ const ExpirationSection = ({
     isExpirationEnabled,
     onCheckboxChange,
     onExpirationDateChange,
+    onMaxUsesChange,
 }) => {
     const now = new Date().getTime();
     const datepicker = (
         <p>
-            <Select name="expiration" label="Expires After" className="mll mrl">
+            <Select
+                name="expiration"
+                label="Expires After"
+                className="mll mrl"
+                onChange={event => {
+                    if (event.target && event.target.value && event.target.value !== '-1') {
+                        onExpirationDateChange(new Date(parseInt(event.target.value, 10)));
+                    } else {
+                        onExpirationDateChange(null);
+                    }
+                }}
+            >
                 <option value="-1">Never</option>
-                <option value={new Date(now + 60 * 60 * 1000)}>1 hour</option>
-                <option value={new Date(now + 60 * 60 * 1000 * 24 * 1)}>1 day</option>
-                <option value={new Date(now + 60 * 60 * 1000 * 24 * 7)}>1 week</option>
-                <option value={new Date(now + 60 * 60 * 1000 * 24 * 30)}>30 days</option>
+                <option value={new Date(now + 60 * 60 * 1000).getTime()}>1 hour</option>
+                <option value={new Date(now + 60 * 60 * 1000 * 24 * 1).getTime()}>1 day</option>
+                <option value={new Date(now + 60 * 60 * 1000 * 24 * 7).getTime()}>1 week</option>
+                <option value={new Date(now + 60 * 60 * 1000 * 24 * 30).getTime()}>30 days</option>
             </Select>
-            <Select name="expiration-uses" label="Max Number of Uses" className="mll mrl">
-                <option>Unlimited</option>
-                <option>1</option>
-                <option>2</option>
-                <option>5</option>
-                <option>10</option>
-                <option>25</option>
-                <option>50</option>
-                <option>100</option>
-                <option>1000</option>
+            <Select name="expiration-uses" label="Max Number of Uses" className="mll mrl" onChange={onMaxUsesChange}>
+                <option value="0">Unlimited</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="1000">1000</option>
             </Select>
         </p>
     );
@@ -76,5 +88,6 @@ ExpirationSection.propTypes = {
     isExpirationEnabled: PropTypes.bool.isRequired,
     onCheckboxChange: PropTypes.func.isRequired,
     onExpirationDateChange: PropTypes.func.isRequired,
+    onMaxUsesChange: PropTypes.func.isRequired,
 };
 export default ExpirationSection;

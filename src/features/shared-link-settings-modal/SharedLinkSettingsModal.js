@@ -157,6 +157,7 @@ class SharedLinkSettingsModal extends Component {
             passwordError: props.passwordError,
             vanityName: props.vanityName,
             vanityNameError: props.vanityNameError,
+            maxUses: 0,
         };
     }
 
@@ -178,6 +179,7 @@ class SharedLinkSettingsModal extends Component {
 
     onSubmit = event => {
         event.preventDefault();
+        const { item } = this.props;
 
         const {
             expirationDate,
@@ -186,10 +188,54 @@ class SharedLinkSettingsModal extends Component {
             isPasswordEnabled,
             password,
             vanityName,
+            maxUses,
         } = this.state;
 
+        // Create shared link call to graphql
+        let input = `{itemId: "${item.id}", itemType: "${item.type}"`;
+        if (expirationDate && expirationDate !== '-1') {
+            const isoTime = expirationDate.toISOString();
+            input += `, expiration: "${isoTime}"`;
+        }
+        if (maxUses && maxUses > 0) {
+            input += `, maxUses: ${maxUses}`;
+        }
+        input += '}';
+
+        fetch('/app-api/graphql', {
+            headers: {
+                accept: '*/*',
+                'accept-language': 'en-US,en;q=0.9',
+                'content-type': 'application/json',
+            },
+            referrerPolicy: 'no-referrer',
+            body: JSON.stringify({
+                operationName: null,
+                variables: {},
+                query: `
+                    mutation {
+                        createShareLink(input: ${input}) {
+                            id
+                            shareName
+                            createdAt
+                            item {
+                                name
+                            }
+                            createdBy {
+                                name
+                            }
+                        }
+                    }
+                `,
+            }),
+            method: 'POST',
+            mode: 'cors',
+            credentials: 'include',
+        });
+
         this.props.onSubmit({
-            expirationTimestamp: expirationDate ? expirationDate.getTime() : undefined,
+            // was causing bugs
+            // expirationTimestamp: expirationDate ? expirationDate.getTime() : undefined,
             isDownloadEnabled,
             isExpirationEnabled,
             isPasswordEnabled,
@@ -214,6 +260,10 @@ class SharedLinkSettingsModal extends Component {
 
     onPasswordCheckboxChange = event => {
         this.setState({ isPasswordEnabled: event.target.checked });
+    };
+
+    onMaxUsesChange = event => {
+        this.setState({ maxUses: event.target.value });
     };
 
     onExpirationDateChange = date => {
@@ -298,6 +348,7 @@ class SharedLinkSettingsModal extends Component {
                 isExpirationEnabled={isExpirationEnabled}
                 onCheckboxChange={this.onExpirationCheckboxChange}
                 onExpirationDateChange={this.onExpirationDateChange}
+                onMaxUsesChange={this.onMaxUsesChange}
             />
         );
     }
@@ -437,8 +488,8 @@ class SharedLinkSettingsModal extends Component {
                     {this.renderAccessLevelSection()}
                     {this.renderExpirationSection()}
                     {this.renderPasswordSection()}
-                    {this.renderVanityNameSection()}
-                    {this.renderAllowDownloadSection()}
+                    {/* {this.renderVanityNameSection()}
+                    {this.renderAllowDownloadSection()} */}
                     <ModalActions>
                         <PlainButton
                             isDisabled={submitting}
