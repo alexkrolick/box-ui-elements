@@ -59,6 +59,7 @@ type Props = {
 };
 
 type State = {
+    hasFetchedSharedLinkFromGraphQL: boolean,
     isAutoCreatingSharedLink: boolean,
     isCopySuccessful: ?boolean,
 };
@@ -74,6 +75,7 @@ class SharedLinkSection extends React.Component<Props, State> {
 
         this.state = {
             isAutoCreatingSharedLink: false,
+            hasFetchedSharedLinkFromGraphQL: false,
             isCopySuccessful: null,
         };
     }
@@ -104,6 +106,7 @@ class SharedLinkSection extends React.Component<Props, State> {
     // to start doing this check.
     componentDidUpdate(prevProps: Props) {
         const {
+            item,
             sharedLink,
             autoCreateSharedLink,
             addSharedLink,
@@ -114,7 +117,45 @@ class SharedLinkSection extends React.Component<Props, State> {
             onCopyInit = () => {},
         } = this.props;
 
-        const { isAutoCreatingSharedLink, isCopySuccessful } = this.state;
+        const { isAutoCreatingSharedLink, hasFetchedSharedLinkFromGraphQL, isCopySuccessful } = this.state;
+
+        // Call into GraphQL to get/create link
+
+        if (!hasFetchedSharedLinkFromGraphQL) {
+            this.setState({ hasFetchedSharedLinkFromGraphQL: true });
+
+            // Async fetch shared link
+            fetch('/app-api/graphql', {
+                headers: {
+                    accept: '*/*',
+                    'accept-language': 'en-US,en;q=0.9',
+                    'content-type': 'application/json',
+                },
+                referrerPolicy: 'no-referrer',
+                body: `{"operationName":null,"variables":{},"query":"{\\n  shareLinkPrimaryByItem(itemId: \\"${item.id}\\", itemType: \\"${item.type}\\") {\\n    shareName\\n    createdAt\\n    item {\\n      name\\n    }\\n    createdBy {\\n      name\\n    }\\n  }\\n}\\n"}`,
+                method: 'POST',
+                mode: 'cors',
+                credentials: 'include',
+            }).then(async result => {
+                const results = await result.json();
+
+                if (!results || !results.data || !results.data.shareLinkPrimaryByItem) {
+                    // Fire and forget
+                    fetch('/app-api/graphql', {
+                        headers: {
+                            accept: '*/*',
+                            'accept-language': 'en-US,en;q=0.9',
+                            'content-type': 'application/json',
+                        },
+                        referrerPolicy: 'no-referrer',
+                        body: `{"operationName":null,"variables":{},"query":"mutation {\\n  createShareLink(input: {itemId: \\"${item.id}\\", itemType: \\"${item.type}\\"}) {\\n    id\\n    shareName\\n    createdAt\\n    item {\\n      name\\n    }\\n    createdBy {\\n      name\\n    }\\n  }\\n}\\n"}`,
+                        method: 'POST',
+                        mode: 'cors',
+                        credentials: 'include',
+                    });
+                }
+            });
+        }
 
         if (
             autoCreateSharedLink &&
@@ -216,6 +257,12 @@ class SharedLinkSection extends React.Component<Props, State> {
         if (!isDownloadSettingAvailable) {
             allowedPermissionLevels = allowedPermissionLevels.filter(level => level !== CAN_VIEW_DOWNLOAD);
         }
+
+        // let description = null;
+
+        // if (description) {
+        //     description = <FormattedMessage {...messages.sharedLinkPubliclyAvailable} />;
+        // }
 
         return (
             <>

@@ -522,7 +522,7 @@ class UnifiedShareForm extends React.Component<USFProps, State> {
                         <SharedLinkSection
                             addSharedLink={onAddLink}
                             autofocusSharedLink={this.shouldAutoFocusSharedLink()}
-                            autoCreateSharedLink={createSharedLinkOnLoad}
+                            autoCreateSharedLink
                             triggerCopyOnLoad={createSharedLinkOnLoad && focusSharedLinkOnLoad}
                             changeSharedLinkAccessLevel={changeSharedLinkAccessLevel}
                             changeSharedLinkPermissionLevel={changeSharedLinkPermissionLevel}
