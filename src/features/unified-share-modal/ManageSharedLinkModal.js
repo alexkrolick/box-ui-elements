@@ -61,6 +61,8 @@ function ManageSharedLinkModal(props: Props) {
                             ) {
                                 shareName
                                 createdAt
+                                expiration
+                                maxUses
                                 item {
                                     name
                                 }
