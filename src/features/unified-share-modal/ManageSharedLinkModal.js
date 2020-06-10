@@ -108,12 +108,12 @@ function ManageSharedLinkModal(props: Props) {
             <table className="bdl-Table table">
                 <thead>
                     <tr>
-                        <th>Created By</th>
+                        <th style={{ width: '150px' }}>Created By</th>
                         <th>Shared Link ID</th>
-                        <th />
+                        <th style={{ width: '70px' }} />
                         <th>Expiration</th>
-                        <th>Uses</th>
-                        <th />
+                        <th style={{ width: '1%' }}>Uses</th>
+                        <th style={{ width: '1%' }} />
                     </tr>
                 </thead>
                 <tbody>
