@@ -16,6 +16,7 @@ import { bdlWatermelonRed } from '../../styles/variables';
 import type { ItemType } from '../../common/types/core';
 import { isBoxNote } from '../../utils/file';
 import Browser from '../../utils/Browser';
+import ReadableTime from '../../components/time/ReadableTime';
 import LoadingIndicatorWrapper from '../../components/loading-indicator/LoadingIndicatorWrapper';
 
 import convertToBoxItem from './utils/item';
@@ -234,6 +235,40 @@ class SharedLinkSection extends React.Component<Props, State> {
         return isSharedLinkEnabled && canRemoveLink;
     };
 
+    renderDescription() {
+        const { graphShareData } = this.state;
+
+        let date = null;
+        if (graphShareData.expiration) {
+            date = (
+                <ReadableTime timestamp={new Date(graphShareData.expiration).getTime()} showWeekday alwaysShowTime />
+            );
+        }
+
+        let uses = null;
+        if (graphShareData.maxUses) {
+            uses = `after ${graphShareData.maxUses} uses`;
+        }
+
+        let conditions = null;
+        if (date && uses) {
+            conditions = (
+                <>
+                    {date} or {uses}
+                </>
+            );
+        } else if (date) {
+            conditions = date;
+        } else if (uses) {
+            conditions = uses;
+        }
+
+        if (conditions) {
+            return <span className="bdl-SharedLinkSection-description">This link will expire {conditions}.</span>;
+        }
+        return <span className="bdl-SharedLinkSection-description">This link will not expire.</span>;
+    }
+
     renderSharedLink() {
         const {
             autofocusSharedLink,
@@ -267,7 +302,7 @@ class SharedLinkSection extends React.Component<Props, State> {
 
         let shareUrl = url;
 
-        if (graphShareData.shareName) {
+        if (graphShareData && graphShareData.shareName) {
             shareUrl = shareUrl.replace(/[^\/]+$/, graphShareData.shareName);
             shareUrl = shareUrl.replace(/^.+\.net\//, 'https://box.com/');
         } else {
@@ -383,14 +418,15 @@ class SharedLinkSection extends React.Component<Props, State> {
                         </Tooltip>
                     )}
                 </div> */}
-                {accessLevel === ANYONE_WITH_LINK && (
+                {graphShareData && this.renderDescription()}
+                {/* {accessLevel === ANYONE_WITH_LINK && (
                     <div className="security-indicator-note">
                         <span className="security-indicator-icon-globe">
                             <IconGlobe height={12} width={12} />
                         </span>
                         <FormattedMessage {...messages.sharedLinkPubliclyAvailable} />
                     </div>
-                )}
+                )} */}
             </>
         );
     }
