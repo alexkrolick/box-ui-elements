@@ -302,7 +302,7 @@
 
 .bdl-ManageSharedLinkModal {
     .modal-dialog {
-        width: 750px;
+        width: 850px;
         max-width: 100%;
     }
 
@@ -321,7 +321,8 @@
 
             &:hover,
             &:focus-within {
-                .bdl-sharedlink-revoke {
+                .bdl-sharedlink-revoke,
+                .bdl-sharedLinkTable-copy {
                     opacity: 1;
                 }
             }
@@ -335,10 +336,15 @@
         .bdl-sharedLink-revoke {
             opacity: 1;
         }
+
+        .bdl-sharedLinkTable-copy {
+            opacity: 1;
+        }
     }
 }
 
-.bdl-sharedLink-revoke {
+.bdl-sharedLink-revoke,
+.bdl-sharedLinkTable-copy {
     opacity: 0;
     transition: $bdl-transitionDurationBase;
 }
