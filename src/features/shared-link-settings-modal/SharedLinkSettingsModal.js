@@ -301,6 +301,28 @@ class SharedLinkSettingsModal extends Component {
         );
     }
 
+    renderAccessLevelSection() {
+        return (
+            <Fieldset
+                title={
+                    <FormattedMessage
+                        id="be.usm.sharedlinkaccess"
+                        description="shared link settings field label"
+                        defaultMessage="Link Access"
+                    />
+                }
+            >
+                <SharedLinkAccessMenu {...this.props} /> &nbsp; &nbsp;
+                <SharedLinkPermissionMenu
+                    {...this.props}
+                    canChangePermissionLevel
+                    allowedPermissionLevels={['canViewDownload', 'canViewOnly']}
+                    permissionLevel="canViewOnly"
+                />
+            </Fieldset>
+        );
+    }
+
     renderAccessLevelNotice() {
         const { accessLevel } = this.props;
         const { isDownloadEnabled } = this.state;
@@ -409,24 +431,7 @@ class SharedLinkSettingsModal extends Component {
                             <FormattedMessage {...messages.inaccessibleSettingsNotice} />
                         </InlineNotice>
                     )}
-                    <Fieldset
-                        title={
-                            <FormattedMessage
-                                id="be.usm.sharedlinkaccess"
-                                description="shared link settings field label"
-                                defaultMessage="Link Access"
-                            />
-                        }
-                    >
-                        <SharedLinkAccessMenu {...this.props} /> &nbsp; &nbsp;
-                        <SharedLinkPermissionMenu
-                            {...this.props}
-                            canChangePermissionLevel
-                            allowedPermissionLevels={['canViewDownload', 'canViewOnly']}
-                            permissionLevel="canViewOnly"
-                        />
-                    </Fieldset>
-                    {this.renderAccessLevelNotice()}
+                    {this.renderAccessLevelSection()}
                     {this.renderExpirationSection()}
                     {this.renderPasswordSection()}
                     {this.renderVanityNameSection()}
