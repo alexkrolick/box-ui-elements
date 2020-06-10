@@ -16,6 +16,7 @@ import { bdlWatermelonRed } from '../../styles/variables';
 import type { ItemType } from '../../common/types/core';
 import { isBoxNote } from '../../utils/file';
 import Browser from '../../utils/Browser';
+import LoadingIndicatorWrapper from '../../components/loading-indicator/LoadingIndicatorWrapper';
 
 import convertToBoxItem from './utils/item';
 import SharedLinkAccessMenu from './SharedLinkAccessMenu';
@@ -83,7 +84,7 @@ class SharedLinkSection extends React.Component<Props, State> {
     }
 
     componentDidMount() {
-        const { sharedLink, autoCreateSharedLink, addSharedLink, submitting } = this.props;
+        const { item, sharedLink, autoCreateSharedLink, addSharedLink, submitting } = this.props;
 
         if (
             autoCreateSharedLink &&
@@ -96,34 +97,9 @@ class SharedLinkSection extends React.Component<Props, State> {
             this.setState({ isAutoCreatingSharedLink: true });
             addSharedLink();
         }
-    }
-
-    // We handle didUpdate but not didMount because
-    // the component initially renders with empty data
-    // in order to start showing UI components.
-    // When getInitialData completes in the parent we
-    // rerender with correct sharedLink data and can
-    // check whether to auto create a new one.
-    // Note: we are assuming the 2nd render is safe
-    // to start doing this check.
-    componentDidUpdate(prevProps: Props) {
-        const {
-            item,
-            sharedLink,
-            autoCreateSharedLink,
-            addSharedLink,
-            submitting,
-            triggerCopyOnLoad,
-            onCopyError = () => {},
-            onCopySuccess = () => {},
-            onCopyInit = () => {},
-        } = this.props;
-
-        const { isAutoCreatingSharedLink, hasFetchedSharedLinkFromGraphQL, isCopySuccessful } = this.state;
 
         // Call into GraphQL to get/create link
-
-        if (!hasFetchedSharedLinkFromGraphQL) {
+        if (!this.state.hasFetchedSharedLinkFromGraphQL) {
             this.setState({ hasFetchedSharedLinkFromGraphQL: true });
 
             // Async fetch shared link
@@ -167,6 +143,29 @@ class SharedLinkSection extends React.Component<Props, State> {
                 });
             });
         }
+    }
+
+    // We handle didUpdate but not didMount because
+    // the component initially renders with empty data
+    // in order to start showing UI components.
+    // When getInitialData completes in the parent we
+    // rerender with correct sharedLink data and can
+    // check whether to auto create a new one.
+    // Note: we are assuming the 2nd render is safe
+    // to start doing this check.
+    componentDidUpdate(prevProps: Props) {
+        const {
+            sharedLink,
+            autoCreateSharedLink,
+            addSharedLink,
+            submitting,
+            triggerCopyOnLoad,
+            onCopyError = () => {},
+            onCopySuccess = () => {},
+            onCopyInit = () => {},
+        } = this.props;
+
+        const { isAutoCreatingSharedLink, isCopySuccessful } = this.state;
 
         if (
             autoCreateSharedLink &&
@@ -247,6 +246,10 @@ class SharedLinkSection extends React.Component<Props, State> {
 
         if (overrideShareLink) {
             shareUrl = shareUrl.replace(/[^\/]+$/, overrideShareLink);
+            shareUrl = shareUrl.replace(/^.+\.net\//, 'https://box.com/');
+        } else {
+            // null this out until it returns from graphql
+            shareUrl = '';
         }
 
         const {
@@ -534,7 +537,9 @@ class SharedLinkSection extends React.Component<Props, State> {
                     {/* {this.renderToggle()} */}
                     {isSharedLinkEnabled && onSettingsClick && this.renderSharedLinkSettingsLink()}
                 </div>
-                {isSharedLinkEnabled && this.renderSharedLink()}
+                <LoadingIndicatorWrapper isLoading={!this.state.overrideShareLink} hideContent>
+                    {isSharedLinkEnabled && this.renderSharedLink()}
+                </LoadingIndicatorWrapper>
             </div>
         );
     }
