@@ -33,6 +33,17 @@ function ManageSharedLinkModal(props: Props) {
                 case 'links/error': {
                     return { links: [], isLoading: false, error: action.payload.error };
                 }
+                case 'linkRevoke/success': {
+                    return {
+                        ...prevState,
+                        links: prevState.links.map(l => {
+                            if (l.id === action.payload.id) {
+                                return { ...l, revoked: true };
+                            }
+                            return l;
+                        }),
+                    };
+                }
                 default: {
                     return prevState;
                 }
@@ -120,7 +131,7 @@ function ManageSharedLinkModal(props: Props) {
         } catch (error) {
             dispatch({ type: 'linkRevoke/fail', payload: { error } });
         }
-        dispatch({ type: 'linkRevoke/success', payload: json.data });
+        dispatch({ type: 'linkRevoke/success', payload: { id, ...json.data } });
     };
 
     React.useEffect(() => {
