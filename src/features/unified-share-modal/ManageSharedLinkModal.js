@@ -129,15 +129,21 @@ function ManageSharedLinkModal(props: Props) {
                                             <ReadableTime timestamp={new Date(link.createdAt).getTime()} />
                                         </small>
                                     </td>
-                                    <td
-                                        style={{
-                                            maxWidth: 100,
-                                            fontFamily: 'monospace',
-                                            overflowX: 'hidden',
-                                            textOverflow: 'ellipsis',
-                                        }}
-                                    >
-                                        {link.shareName}
+                                    <td>
+                                        <span
+                                            style={{
+                                                fontFamily: 'monospace',
+                                                maxWidth: 80,
+                                                display: 'inline-block',
+                                                overflowX: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                            }}
+                                            title={link.shareName}
+                                        >
+                                            {link.shareName}
+                                        </span>
+                                        <br />
+                                        <small>People in your company can view</small>
                                     </td>
                                     <td>
                                         <PlainButton>
