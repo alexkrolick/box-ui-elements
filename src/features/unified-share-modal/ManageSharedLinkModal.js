@@ -7,6 +7,7 @@ import Button from '../../components/button';
 import PlainButton from '../../components/plain-button';
 import ReadableTime from '../../components/time/ReadableTime';
 import LoadingIndicator from '../../components/loading-indicator';
+import IconCopy from '../../icons/general/IconCopy';
 import * as vars from '../../styles/variables';
 
 type Props = {
@@ -112,6 +113,7 @@ function ManageSharedLinkModal(props: Props) {
                         <th>Expiration</th>
                         <th>Name</th>
                         <th />
+                        <th />
                     </tr>
                 </thead>
                 <tbody>
@@ -144,6 +146,9 @@ function ManageSharedLinkModal(props: Props) {
                                         }}
                                     >
                                         {link.shareName}
+                                    </td>
+                                    <td>
+                                        <IconCopy />
                                     </td>
                                     <td style={{ textAlign: 'right' }}>
                                         <PlainButton className="bdl-sharedLink-revoke">
