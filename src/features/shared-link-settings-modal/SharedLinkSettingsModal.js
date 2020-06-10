@@ -8,6 +8,8 @@ import { Modal, ModalActions } from '../../components/modal';
 import InlineNotice from '../../components/inline-notice';
 import Link from '../../components/link/LinkBase';
 import commonMessages from '../../common/messages';
+import Fieldset from '../../components/fieldset';
+
 import Classification from '../classification';
 
 import VanityNameSection from './VanityNameSection';
@@ -17,6 +19,9 @@ import AllowDownloadSection from './AllowDownloadSection';
 import messages from './messages';
 
 import { PEOPLE_WITH_LINK, PEOPLE_IN_COMPANY, PEOPLE_IN_ITEM } from '../shared-link-modal/constants';
+
+import SharedLinkPermissionMenu from '../unified-share-modal/SharedLinkPermissionMenu';
+import SharedLinkAccessMenu from '../unified-share-modal/SharedLinkAccessMenu';
 
 import './SharedLinkSettingsModal.scss';
 
@@ -404,6 +409,23 @@ class SharedLinkSettingsModal extends Component {
                             <FormattedMessage {...messages.inaccessibleSettingsNotice} />
                         </InlineNotice>
                     )}
+                    <Fieldset
+                        title={
+                            <FormattedMessage
+                                id="be.usm.sharedlinkaccess"
+                                description="shared link settings field label"
+                                defaultMessage="Link Access"
+                            />
+                        }
+                    >
+                        <SharedLinkAccessMenu {...this.props} /> &nbsp; &nbsp;
+                        <SharedLinkPermissionMenu
+                            {...this.props}
+                            canChangePermissionLevel
+                            allowedPermissionLevels={['canViewDownload', 'canViewOnly']}
+                            permissionLevel="canViewOnly"
+                        />
+                    </Fieldset>
                     {this.renderAccessLevelNotice()}
                     {this.renderExpirationSection()}
                     {this.renderPasswordSection()}
