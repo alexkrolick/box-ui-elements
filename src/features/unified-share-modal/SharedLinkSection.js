@@ -60,10 +60,10 @@ type Props = {
 };
 
 type State = {
+    graphShareData: ?string,
     hasFetchedSharedLinkFromGraphQL: boolean,
     isAutoCreatingSharedLink: boolean,
     isCopySuccessful: ?boolean,
-    overrideShareLink: ?string,
 };
 
 class SharedLinkSection extends React.Component<Props, State> {
@@ -79,7 +79,7 @@ class SharedLinkSection extends React.Component<Props, State> {
             isAutoCreatingSharedLink: false,
             hasFetchedSharedLinkFromGraphQL: false,
             isCopySuccessful: null,
-            overrideShareLink: null,
+            graphShareData: null,
         };
     }
 
@@ -110,7 +110,18 @@ class SharedLinkSection extends React.Component<Props, State> {
                     'content-type': 'application/json',
                 },
                 referrerPolicy: 'no-referrer',
-                body: `{"operationName":null,"variables":{},"query":"{\\n  shareLinkPrimaryByItem(itemId: \\"${item.id}\\", itemType: \\"${item.type}\\") {\\n    shareName\\n    createdAt\\n    item {\\n      name\\n    }\\n    createdBy {\\n      name\\n    }\\n  }\\n}\\n"}`,
+                body: JSON.stringify({
+                    operationName: null,
+                    variables: {},
+                    query: `{
+                        shareLinkPrimaryByItem(itemId: "${item.id}", itemType: "${item.type}") {
+                            shareName
+                            createdAt
+                            expiration
+                            maxUses
+                        }
+                    }`,
+                }),
                 method: 'POST',
                 mode: 'cors',
                 credentials: 'include',
@@ -118,7 +129,7 @@ class SharedLinkSection extends React.Component<Props, State> {
                 const results = await result.json();
 
                 if (results && results.data && results.data.shareLinkPrimaryByItem) {
-                    this.setState({ overrideShareLink: results.data.shareLinkPrimaryByItem.shareName });
+                    this.setState({ graphShareData: results.data.shareLinkPrimaryByItem });
                     return;
                 }
 
@@ -130,7 +141,19 @@ class SharedLinkSection extends React.Component<Props, State> {
                         'content-type': 'application/json',
                     },
                     referrerPolicy: 'no-referrer',
-                    body: `{"operationName":null,"variables":{},"query":"mutation {\\n  createShareLink(input: {itemId: \\"${item.id}\\", itemType: \\"${item.type}\\"}) {\\n    id\\n    shareName\\n    createdAt\\n    item {\\n      name\\n    }\\n    createdBy {\\n      name\\n    }\\n  }\\n}\\n"}`,
+                    body: JSON.stringify({
+                        operationName: null,
+                        variables: {},
+                        query: `mutation {
+                            createShareLink(input: {itemId: "${item.id}", itemType: "${item.type}"}) {
+                                id
+                                shareName
+                                createdAt
+                                expiration
+                                maxUses
+                            }
+                        }`,
+                    }),
                     method: 'POST',
                     mode: 'cors',
                     credentials: 'include',
@@ -138,7 +161,7 @@ class SharedLinkSection extends React.Component<Props, State> {
                     const shareData = await result2.json();
 
                     if (shareData && shareData.data && shareData.data.createShareLink) {
-                        this.setState({ overrideShareLink: shareData.data.createShareLink.shareName });
+                        this.setState({ graphShareData: shareData.data.createShareLink });
                     }
                 });
             });
@@ -228,7 +251,7 @@ class SharedLinkSection extends React.Component<Props, State> {
             tooltips,
         } = this.props;
 
-        const { isCopySuccessful, overrideShareLink } = this.state;
+        const { isCopySuccessful, graphShareData } = this.state;
 
         const {
             accessLevel,
@@ -244,8 +267,8 @@ class SharedLinkSection extends React.Component<Props, State> {
 
         let shareUrl = url;
 
-        if (overrideShareLink) {
-            shareUrl = shareUrl.replace(/[^\/]+$/, overrideShareLink);
+        if (graphShareData.shareName) {
+            shareUrl = shareUrl.replace(/[^\/]+$/, graphShareData.shareName);
             shareUrl = shareUrl.replace(/^.+\.net\//, 'https://box.com/');
         } else {
             // null this out until it returns from graphql
@@ -537,7 +560,7 @@ class SharedLinkSection extends React.Component<Props, State> {
                     {/* {this.renderToggle()} */}
                     {isSharedLinkEnabled && onSettingsClick && this.renderSharedLinkSettingsLink()}
                 </div>
-                <LoadingIndicatorWrapper isLoading={!this.state.overrideShareLink} hideContent>
+                <LoadingIndicatorWrapper isLoading={!this.state.graphShareData} hideContent>
                     {isSharedLinkEnabled && this.renderSharedLink()}
                 </LoadingIndicatorWrapper>
             </div>
