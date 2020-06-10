@@ -28,7 +28,7 @@ const ExpirationSection = ({
 }) => {
     const now = new Date().getTime();
     const datepicker = (
-        <div>
+        <p>
             <Select name="expiration" label="Expires After" className="mll">
                 <option value="-1">Never</option>
                 <option value={new Date(now + 60 * 60 * 1000)}>1 hour</option>
@@ -47,7 +47,7 @@ const ExpirationSection = ({
                 <option>100</option>
                 <option>1000</option>
             </Select>
-        </div>
+        </p>
     );
     return (
         <div>

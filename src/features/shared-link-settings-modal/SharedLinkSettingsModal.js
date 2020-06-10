@@ -303,23 +303,25 @@ class SharedLinkSettingsModal extends Component {
 
     renderAccessLevelSection() {
         return (
-            <Fieldset
-                title={
-                    <FormattedMessage
-                        id="be.usm.sharedlinkaccess"
-                        description="shared link settings field label"
-                        defaultMessage="Link Access"
+            <p className="mbm">
+                <Fieldset
+                    title={
+                        <FormattedMessage
+                            id="be.usm.sharedlinkaccess"
+                            description="shared link settings field label"
+                            defaultMessage="Link Access"
+                        />
+                    }
+                >
+                    <SharedLinkAccessMenu {...this.props} /> &nbsp; &nbsp;
+                    <SharedLinkPermissionMenu
+                        {...this.props}
+                        canChangePermissionLevel
+                        allowedPermissionLevels={['canViewDownload', 'canViewOnly']}
+                        permissionLevel="canViewOnly"
                     />
-                }
-            >
-                <SharedLinkAccessMenu {...this.props} /> &nbsp; &nbsp;
-                <SharedLinkPermissionMenu
-                    {...this.props}
-                    canChangePermissionLevel
-                    allowedPermissionLevels={['canViewDownload', 'canViewOnly']}
-                    permissionLevel="canViewOnly"
-                />
-            </Fieldset>
+                </Fieldset>
+            </p>
         );
     }
 
