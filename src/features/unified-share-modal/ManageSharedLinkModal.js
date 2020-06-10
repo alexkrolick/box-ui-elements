@@ -109,10 +109,10 @@ function ManageSharedLinkModal(props: Props) {
                 <thead>
                     <tr>
                         <th>Created By</th>
-                        <th>Uses</th>
-                        <th>Expiration</th>
-                        <th>Name</th>
+                        <th>Shared Link ID</th>
                         <th />
+                        <th>Expiration</th>
+                        <th>Uses</th>
                         <th />
                     </tr>
                 </thead>
@@ -129,14 +129,6 @@ function ManageSharedLinkModal(props: Props) {
                                             <ReadableTime timestamp={new Date(link.createdAt).getTime()} />
                                         </small>
                                     </td>
-                                    <td>{link.maxUses ? `${usesCount}/${link.maxUses}` : `${usesCount}`}</td>
-                                    <td>
-                                        {link.expiration ? (
-                                            <ReadableTime timestamp={new Date(link.expiration).getTime()} />
-                                        ) : (
-                                            'Never'
-                                        )}
-                                    </td>
                                     <td
                                         style={{
                                             maxWidth: 100,
@@ -148,8 +140,18 @@ function ManageSharedLinkModal(props: Props) {
                                         {link.shareName}
                                     </td>
                                     <td>
-                                        <IconCopy />
+                                        <PlainButton>
+                                            <IconCopy />
+                                        </PlainButton>
                                     </td>
+                                    <td>
+                                        {link.expiration ? (
+                                            <ReadableTime timestamp={new Date(link.expiration).getTime()} />
+                                        ) : (
+                                            'Never'
+                                        )}
+                                    </td>
+                                    <td>{link.maxUses ? `${usesCount}/${link.maxUses}` : `${usesCount}`}</td>
                                     <td style={{ textAlign: 'right' }}>
                                         <PlainButton className="bdl-sharedLink-revoke">
                                             <span style={{ color: vars.bdlWatermelonRed }}>Revoke</span>
