@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 
+import PlainButton from '../../components/button';
 import Button from '../../components/button';
 import PrimaryButton from '../../components/primary-button';
 import { Modal, ModalActions } from '../../components/modal';
@@ -439,15 +440,24 @@ class SharedLinkSettingsModal extends Component {
                     {this.renderVanityNameSection()}
                     {this.renderAllowDownloadSection()}
                     <ModalActions>
-                        <Button isDisabled={submitting} onClick={onRequestClose} type="button" {...cancelButtonProps}>
+                        <PlainButton
+                            isDisabled={submitting}
+                            onClick={onRequestClose}
+                            type="button"
+                            {...cancelButtonProps}
+                        >
                             <FormattedMessage {...commonMessages.cancel} />
-                        </Button>
+                        </PlainButton>
                         <PrimaryButton
                             isDisabled={submitting || disableSaveBtn}
                             isLoading={submitting}
                             {...saveButtonProps}
                         >
-                            <FormattedMessage {...commonMessages.save} />
+                            <FormattedMessage
+                                id="be.sharedlinksettings.save"
+                                defaultMessage="Generate New Link"
+                                description="Save action label for shared link settings"
+                            />
                         </PrimaryButton>
                     </ModalActions>
                 </form>

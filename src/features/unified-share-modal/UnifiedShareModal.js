@@ -8,6 +8,7 @@ import { Modal } from '../../components/modal';
 import UnifiedShareModalTitle from './UnifiedShareModalTitle';
 import UnifiedShareForm from './UnifiedShareForm';
 import RemoveLinkConfirmModal from './RemoveLinkConfirmModal';
+import ManageSharedLinkModal from './ManageSharedLinkModal';
 import type { USMProps } from './flowTypes';
 
 import './UnifiedShareModal.scss';
@@ -17,6 +18,7 @@ type State = {
     isConfirmModalOpen: boolean,
     isEmailLinkSectionExpanded: boolean,
     isFetching: boolean,
+    isManageLinksModalOpen: boolean,
     sharedLinkLoaded: boolean,
     shouldRenderFTUXTooltip: boolean,
     showCollaboratorList: boolean,
@@ -49,6 +51,7 @@ class UnifiedShareModal extends React.Component<USMProps, State> {
             sharedLinkLoaded: false,
             shouldRenderFTUXTooltip: false,
             showCollaboratorList: false,
+            isManageLinksModalOpen: false,
         };
     }
 
@@ -128,6 +131,9 @@ class UnifiedShareModal extends React.Component<USMProps, State> {
             <UnifiedShareForm
                 {...this.props}
                 handleFtuxCloseClick={this.handleFtuxCloseClick}
+                onManageClick={() => {
+                    this.setState({ isManageLinksModalOpen: true });
+                }}
                 isFetching={isFetching}
                 openConfirmModal={this.openConfirmModal}
                 sharedLinkLoaded={sharedLinkLoaded}
@@ -141,7 +147,12 @@ class UnifiedShareModal extends React.Component<USMProps, State> {
         const { canInvite, isOpen, item, onRequestClose, showFormOnly, submitting, trackingProps } = this.props;
         const { modalTracking, removeLinkConfirmModalTracking } = trackingProps;
         const { modalProps } = modalTracking;
-        const { isEmailLinkSectionExpanded, isConfirmModalOpen, showCollaboratorList } = this.state;
+        const {
+            isEmailLinkSectionExpanded,
+            isConfirmModalOpen,
+            showCollaboratorList,
+            isManageLinksModalOpen,
+        } = this.state;
 
         // focus logic at modal level
         const extendedModalProps = {
@@ -158,7 +169,7 @@ class UnifiedShareModal extends React.Component<USMProps, State> {
                 ) : (
                     <Modal
                         className="unified-share-modal"
-                        isOpen={isConfirmModalOpen ? false : isOpen}
+                        isOpen={isConfirmModalOpen || isManageLinksModalOpen ? false : isOpen}
                         onRequestClose={submitting ? undefined : onRequestClose}
                         title={
                             <UnifiedShareModalTitle
@@ -179,6 +190,14 @@ class UnifiedShareModal extends React.Component<USMProps, State> {
                         removeLink={this.removeLink}
                         submitting={submitting}
                         {...removeLinkConfirmModalTracking}
+                    />
+                )}
+                {isManageLinksModalOpen && (
+                    <ManageSharedLinkModal
+                        isOpen={isManageLinksModalOpen}
+                        onRequestClose={() => {
+                            this.setState({ isManageLinksModalOpen: false });
+                        }}
                     />
                 )}
             </>
