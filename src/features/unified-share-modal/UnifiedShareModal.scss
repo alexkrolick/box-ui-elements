@@ -329,12 +329,16 @@
     }
 }
 
+.shared-link-row {
+    &:hover,
+    &:focus {
+        .bdl-sharedLink-revoke {
+            opacity: 1;
+        }
+    }
+}
+
 .bdl-sharedLink-revoke {
     opacity: 0;
     transition: $bdl-transitionDurationBase;
-
-    &:hover,
-    &:focus {
-        opacity: 1;
-    }
 }

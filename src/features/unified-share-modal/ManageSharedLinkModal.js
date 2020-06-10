@@ -121,7 +121,7 @@ function ManageSharedLinkModal(props: Props) {
                         state.links.map(link => {
                             const usesCount = Math.ceil(Math.random() * (link.maxUses || 1));
                             return (
-                                <tr key={link.id}>
+                                <tr className="shared-link-row" key={link.id}>
                                     <td>
                                         {link.createdBy.publicName}
                                         <br />
