@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import Checkbox from '../../components/checkbox';
 import DatePicker from '../../components/date-picker';
 import Fieldset from '../../components/fieldset';
+import Select from '../../components/select';
 
 import messages from './messages';
 
@@ -25,22 +26,27 @@ const ExpirationSection = ({
     onCheckboxChange,
     onExpirationDateChange,
 }) => {
-    const tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+    const now = new Date().getTime();
     const datepicker = (
         <div>
-            <DatePicker
-                displayFormat={displayFormat}
-                error={error}
-                hideLabel
-                inputProps={expirationInputProps}
-                isDisabled={!canChangeExpiration}
-                isRequired
-                label={<FormattedMessage {...messages.expirationLabel} />}
-                minDate={tomorrow}
-                name="expiration"
-                onChange={onExpirationDateChange}
-                value={expirationDate}
-            />
+            <Select name="expiration" label="Expires After" className="mll">
+                <option value="-1">Never</option>
+                <option value={new Date(now + 60 * 60 * 1000)}>1 hour</option>
+                <option value={new Date(now + 60 * 60 * 1000 * 24 * 1)}>1 day</option>
+                <option value={new Date(now + 60 * 60 * 1000 * 24 * 7)}>1 week</option>
+                <option value={new Date(now + 60 * 60 * 1000 * 24 * 30)}>30 days</option>
+            </Select>
+            <Select name="expiration-uses" label="Max Number of Uses" className="mll">
+                <option>Unlimited</option>
+                <option>1</option>
+                <option>2</option>
+                <option>5</option>
+                <option>10</option>
+                <option>25</option>
+                <option>50</option>
+                <option>100</option>
+                <option>1000</option>
+            </Select>
         </div>
     );
     return (

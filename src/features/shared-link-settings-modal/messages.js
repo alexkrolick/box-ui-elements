@@ -55,7 +55,7 @@ const messages = defineMessages({
         id: 'boxui.share.sharedLinkSettings.expirationTitle',
     },
     expirationLabel: {
-        defaultMessage: 'Disable Shared Link on',
+        defaultMessage: 'Enable Expiration',
         description: 'Label for option to enable expiration on a shared link',
         id: 'boxui.share.sharedLinkSettings.expirationLabel',
     },
